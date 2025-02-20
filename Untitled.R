@@ -16,26 +16,19 @@ library(tidyverse)
 allentown.data <- read.csv("data/essentia.data.allentown.csv")
 essentia.data <- read.csv("data/essentia.data.csv")
   
-# goes through all different features for both the essentia data and the allentown line of data
-# and calls func() for each feature to determine if allentown is in/out/close to the range for the current feature
-for (column = 4:length(esenta.data)){
-  feature = essentia.data[column]
-  allen.feature = allentown.data[column]
-  description = func(feature, allen.feature)
-} #this probably needs some work, not correct
 
 #function that takes the current feature, and generates a comparison result for allentown vs. the three artists, and returns the comparisions
-func <- function(feature, allen.feature){
+compare <- function(feature, allen.feature){
   essentia.data |>
     group_by(artist) |>
     summarize(
-      min = min(feature),
-      q1 = quantile(feature, .25),
-      q3 = quantile(feature, .75),
+      min = min(get(feature)),
+      q1 = quantile(get(feature), .25),
+      q3 = quantile(get(feature), .75),
       qr = q3-q1,
       LF = q1 - (1.51*qr),
       UF = q3 + (1.51*qr),
-      max = max(feature)
+      max = max(get(feature))
     ) |>
     mutate(out.of.range = (min > allen.feature)|(max< allen.feature),
            unusual = (LF>allen.feature)|(max<allen.feature),
@@ -45,6 +38,16 @@ func <- function(feature, allen.feature){
                               unusual == TRUE~ "Outlying",
                               TRUE ~ "Within Range")
     )
-  return(essentia.data.description[feature]) #don't know if this is fully right
 }
+
+# goes through all different features for both the essentia data and the allentown line of data
+# and calls func() for each feature to determine if allentown is in/out/close to the range for the current feature
+num.of.cols <- ncol(essentia.data)
+for (i in 4:num.of.cols){
+  feature = colnames(essentia.data)[i] 
+  allen.feature = allentown.data[[feature]]
+  description = compare(feature, allen.feature)
+} 
+
+
 
