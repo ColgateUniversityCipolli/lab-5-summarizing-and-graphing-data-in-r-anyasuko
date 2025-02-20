@@ -16,18 +16,15 @@ library(tidyverse)
 allentown.data <- read.csv("data/essentia.data.allentown.csv")
 essentia.data <- read.csv("data/essentia.data.csv")
   
-allen.loud <- allentown.data[["overall_loudness"]]
-
-
-
-
-for (col = 4:length(esenta.data)){
-  feature = essentia.data[col]
-  allen.feature = allentown.data[col]
+# goes through all different features for both the essentia data and the allentown line of data
+# and calls func() for each feature to determine if allentown is in/out/close to the range for the current feature
+for (column = 4:length(esenta.data)){
+  feature = essentia.data[column]
+  allen.feature = allentown.data[column]
   description = func(feature, allen.feature)
-}
+} #this probably needs some work, not correct
 
-
+#function that takes the current feature, and generates a comparison result for allentown vs. the three artists, and returns the comparisions
 func <- function(feature, allen.feature){
   essentia.data |>
     group_by(artist) |>
@@ -48,5 +45,6 @@ func <- function(feature, allen.feature){
                               unusual == TRUE~ "Outlying",
                               TRUE ~ "Within Range")
     )
+  return(essentia.data.description[feature]) #don't know if this is fully right
 }
 
