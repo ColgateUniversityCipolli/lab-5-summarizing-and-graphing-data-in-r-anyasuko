@@ -39,7 +39,7 @@ compare <- function(feature, allen.feature){
                               unusual == TRUE~ "Outlying",
                               TRUE ~ "Within Range")
     )%>%
-    select()
+    select(artist, description)
 }
 
 # goes through all different features for both the essentia data and the allentown line of data
