@@ -51,13 +51,13 @@ comparison.output.df <- data.frame(feature =character(), The.Front.Bottoms = cha
 
 for (i in 4:num.of.cols){
   feature = colnames(essentia.data)[i] 
-  if (!is.numeric(essentia.data[feature])){
+  if (!is.numeric(essentia.data[[feature]])){
     next
   }
   allen.feature = allentown.data[[feature]]
   description = compare(feature, allen.feature) #outputs a table, where each row is the artist and each col is a descriptor, last col is the comparison
-  comparison.output.df %>%
-    bind_rows(,description)
+  comparison.output.df <-  comparison.output.df|>
+    bind_rows(description)
 } 
 
 (comparison.output.df)
